@@ -32,7 +32,7 @@ const cardsData = [
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-blue-100 text-black">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 text-black">
       <div className="container mx-auto p-8">
         <header className="text-center my-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
