@@ -1,36 +1,73 @@
 import React from "react";
 import { Link } from "react-router-dom"; 
 
+
 const cardsData = [
-  { id: 1, title: "Workshop 1", description: "Learn AI basics", color: "bg-blue-200" },
-  { id: 2, title: "Workshop 2", description: "React for beginners", color: "bg-green-200" },
-  { id: 3, title: "Workshop 3", description: "Node.js crash course", color: "bg-yellow-200" },
-  { id: 4, title: "Workshop 4", description: "Cybersecurity intro", color: "bg-red-200" },
+  { 
+    id: 1, 
+    title: "Workshop 1", 
+    description: "Learn AI basics", 
+    image: "https://placeholder.com/300x200.png?text=AI+Basics" 
+  },
+  { 
+    id: 2, 
+    title: "Workshop 2", 
+    description: "React for beginners", 
+    image: "https://placeholder.com/300x200.png?text=React" 
+  },
+  { 
+    id: 3, 
+    title: "Workshop 3", 
+    description: "Node.js crash course", 
+    image: "https://placeholder.com/300x200.png?text=Node.js" 
+  },
+  { 
+    id: 4, 
+    title: "Workshop 4", 
+    description: "Cybersecurity intro", 
+    image: "https://placeholder.com/300x200.png?text=Cybersecurity" 
+  },
 ];
+
 
 const Home = () => {
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6"> Welcome to AI Workshop</h1>
-      <h1 className="text-3xl font-bold mb-6">Upcoming Workshops</h1>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="min-h-screen bg-blue-100 text-black">
+      <div className="container mx-auto p-8">
+        <header className="text-center my-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Welcome to the AI Workshop
+          </h1>
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Explore the future of technology with our hands-on workshops led by
+            industry experts.
+          </p>
+        </header>
+
+        <h2 className="text-xl font-bold mb-4 text-slate-700">
+          Upcoming Workshops
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {cardsData.map((card) => (
           <div
             key={card.id}
-            className={`p-4 rounded-lg shadow-md ${card.color} hover:scale-105 transition-transform`}
+            className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl flex flex-col"
           >
-            <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-            <p>{card.description}</p>
-            {/* Link to Register page */}
-            <Link
-              to="/register"
-              className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Register
-            </Link>
+            <img src={card.image} alt={card.title} className="w-full h-40 object-cover" />
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold mb-2">{card.title}</h3>
+              <p className="text-slate-600 mb-4 flex-grow">{card.description}</p>
+              <Link
+                to={`/register?workshop=${encodeURIComponent(card.description)}`}
+                className="mt-auto self-start inline-block px-5 py-2 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors"
+              >
+                Register Now
+              </Link>
+            </div>
           </div>
         ))}
+        </div>
       </div>
     </div>
   );
