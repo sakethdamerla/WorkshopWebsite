@@ -33,7 +33,7 @@ This is a React-based website for managing AI workshops. It includes:
 ```bash
 
 git clone https://github.com/sakethdamerla/WorkshopWebsite.git
-cd WorkshopWebsite/frontend
+cd WorkshopWebsite
 ```
 ## 2. Install dependencies
 ```bash
@@ -49,23 +49,7 @@ Open your browser and go to:
 ```bash
 http://localhost:5173
 ```
-Project Structure
-frontend/
-│
-├─ src/
-│  ├─ pages/
-│  │  ├─ Home.jsx
-│  │  ├─ Login.jsx
-│  │  ├─ Register.jsx
-│  │  └─ Dashboard.jsx
-│  ├─ components/
-│  │  └─ Card.jsx
-│  ├─ App.jsx
-│  └─ main.jsx
-│
-├─ index.css
-├─ package.json
-└─ vite.config.js
+
 
 
 ## Contributing
