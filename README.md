@@ -2,29 +2,6 @@
 
 This is a React-based website for managing AI workshops. It includes:
 
-- **Home Page** – Display available workshops in card format.  
-- **Student Login & Registration** – Students can register and login to access workshops.  
-- **Admin Dashboard** – Admin can view registered students and manage workshops.  
-- **Student Dashboard** – Students can see their registered workshops and progress.
-
----
-
-## Features
-
-- Responsive UI with React and Tailwind CSS  
-- Separate dashboards for Admin and Students  
-- Login and registration functionality  
-- Workshop display with card layout  
-
----
-
-## Technologies Used
-
-- **Frontend:** React, Vite, Tailwind CSS  
-- **Backend:** Node.js (optional, can be added later)  
-- **Database:** MongoDB (optional, can be connected later)  
-
----
 
 ## Getting Started
 
@@ -49,6 +26,58 @@ Open your browser and go to:
 ```bash
 http://localhost:5173
 ```
+---
+
+# Workshop Website
+
+This project contains both frontend and backend code for a workshop management website. Follow the steps below to set up and run both parts of the application.
+
+---
+
+## Backend Setup
+
+1. **Navigate to the backend folder:**
+	 ```powershell
+	 cd backend
+	 ```
+2. **Install dependencies:**
+	 ```powershell
+	 npm install
+	 ```
+3. **Start the backend server:**
+	 ```powershell
+	 npm start
+	 ```
+	 - The backend server will start on the configured port (check `server.js`).
+
+---
+
+## Frontend Setup
+
+1. **Navigate to the frontend folder:**
+	 ```powershell
+	 cd frontend
+	 ```
+2. **Install dependencies:**
+	 ```powershell
+	 npm install
+	 ```
+
+3. **Start the frontend development server:**
+	 ```powershell
+	 npm run dev
+	 ```
+	 - The frontend will be available at [http://localhost:5173](http://localhost:5173) by default.
+
+---
+
+
+## Additional Notes
+
+- For any issues, check the official documentation:
+	- [Tailwind CSS + Vite](https://tailwindcss.com/docs/installation/using-vite)
+	- [Vite](https://vitejs.dev/)
+	- [React](https://react.dev/)
 
 
 
@@ -60,7 +89,3 @@ Feel free to fork the repository and make improvements. Pull requests are welcom
 
 This project is open-source and free to use.
 
-
-
-git clone https://github.com/sakethdamerla/WorkshopWebsite.git
-cd WorkshopWebsite/frontend
