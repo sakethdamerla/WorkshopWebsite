@@ -9,15 +9,25 @@ import { AuthProvider } from "./AuthContext";
 import "./index.css"
 
 function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
+  );
+}
+
+function AppContent() {
   const location = useLocation();
-  const showHeader = !['/login', '/register'].includes(location.pathname);
+  const showHeader = !['/login'].includes(location.pathname);
 
   return (
     <div>
       {showHeader && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register/:workshopId?" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
@@ -26,14 +36,4 @@ function App() {
   );
 }
 
-function AppWrapper() {
-  return (
-    <Router>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </Router>
-  )
-}
-
-export default AppWrapper;
+export default App;

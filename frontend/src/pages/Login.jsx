@@ -1,6 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../AuthContext"; // Import useAuth
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,35 +9,39 @@ export default function Login() {
   const [role, setRole] = useState("student");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get login function from AuthContext
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Fixed admin credentials
-    const admin = { email: "admin@workshop.com", password: "admin123" };
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, role }),
+      });
 
-    // Admin login
-    if (role === "admin") {
-      if (email === admin.email && password === admin.password) {
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Failed to login.");
+        return;
+      }
+
+      login(data.user);
+
+      if (data.user.role === "admin") {
         navigate("/admin-dashboard");
       } else {
-        setError("Invalid admin credentials!");
+        navigate("/student-dashboard");
       }
-      return;
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An unexpected error occurred. Please try again.");
     }
-
-    // Student login - read from localStorage
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const student = storedUsers.find(
-      (u) => u.email === email && u.password === password && u.role === "student"
-    );
-
-    if (!student) {
-      setError("Invalid credentials! Please register first.");
-      return;
-    }
-
-    navigate("/student-dashboard");
   };
 
   return (

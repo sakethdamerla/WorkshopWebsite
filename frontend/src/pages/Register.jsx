@@ -10,25 +10,38 @@ export default function Register() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  
+
+
+
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Fetch users from localStorage
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password, role }),
+      });
 
-    // Check if email already exists
-    const exists = storedUsers.find((u) => u.email === email);
-    if (exists) {
-      setError("Email already registered!");
-      return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Failed to register.");
+        return;
+      }
+
+      
+
+      alert("Registration successful! Please log in.");
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("An unexpected error occurred. Please try again.");
     }
-
-    // Add new user
-    storedUsers.push({ name, email, password, role });
-    localStorage.setItem("users", JSON.stringify(storedUsers));
-
-    // Navigate to login page
-    navigate("/login");
   };
 
   return (

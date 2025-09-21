@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   return (
     <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
@@ -34,25 +36,19 @@ export default function Header() {
         </button>
       </div>
       <nav className={`absolute top-16 left-0 right-0 bg-gray-800 md:bg-transparent md:static md:block ${isMenuOpen ? 'block' : 'hidden'}`}>
-        <ul className="flex flex-col md:flex-row md:space-x-4 p-4 md:p-0">
-          {isAuthenticated ? (
+        {isHomePage && (
+          <ul className="flex flex-col md:flex-row md:space-x-4 p-4 md:p-0">
             <li>
-              <button onClick={logout} className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Logout</button>
+              <Link to="/" className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Home</Link>
             </li>
-          ) : (
-            <>
-              <li>
-                <Link to="/" className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Home</Link>
-              </li>
-              <li>
-                <Link to="/login" className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Login</Link>
-              </li>
-              <li>
-                <Link to="/register" className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Register</Link>
-              </li>
-            </>
-          )}
-        </ul>
+            <li>
+              <Link to="/login" className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Login</Link>
+            </li>
+            <li>
+              <Link to="/register" className="block py-2 px-4 hover:bg-gray-700 md:hover:bg-transparent md:hover:text-gray-300 rounded">Register</Link>
+            </li>
+          </ul>
+        )}
       </nav>
     </header>
   );

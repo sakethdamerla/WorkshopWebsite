@@ -1,88 +1,120 @@
-// Placeholder data for enrolled workshops. In a real app, you'd fetch this.
-import { useState } from "react";
-const enrolledWorkshops = [
-  {
-    id: 1,
-    title: "Learn AI basics",
-    progress: 75,
-    image: "https://placeholder.com/300x200.png?text=AI+Basics",
-  },
-  {
-    id: 3,
-    title: "Node.js crash course",
-    progress: 30,
-    image: "https://placeholder.com/300x200.png?text=Node.js",
-  },
-];
+import { useState, useEffect } from "react";
+import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // Placeholder for the logged-in user's name.
-  // In a real app, this would come from your auth context or state management.
-  const userName = "Alex Doe";
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const userName = user?.name || "user";
+  const [workshops, setWorkshops] = useState([]);
+
+  const fetchWorkshops = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/workshops`);
+      const data = await response.json();
+      if (response.ok) {
+        setWorkshops(data);
+      } else {
+        console.error("Failed to fetch workshops:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching workshops:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkshops();
+  }, []);
+
+  const handleWorkshopRegistration = async (workshopId) => {
+    console.log("StudentDashboard: User object before registration check:", user);
+    if (!user?.email) {
+      alert("You must be logged in to register for a workshop.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/workshops/${workshopId}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ studentEmail: user.email }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+        fetchWorkshops(); // Re-fetch workshops to update registration status
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error registering for workshop:", error);
+      alert("Failed to register for workshop.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="container mx-auto p-8">
         {/* Header Section */}
         <header className="md:flex md:items-center md:justify-between mb-12">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold">
-                Welcome, {userName}!
-              </h1>
-              <p className="text-slate-600 mt-2">
-                Let's continue your learning journey.
-              </p>
-            </div>
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                type="button"
-                className="text-slate-500 hover:text-slate-600 focus:outline-none focus:text-slate-600"
-                aria-label="toggle menu"
-              >
-                <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current">
-                  {isMenuOpen ? (
-                    <path fillRule="evenodd" d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z" />
-                  ) : (
-                    <path fillRule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z" />
-                  )}
-                </svg>
-              </button>
-            </div>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold">
+              Welcome, {userName}!
+            </h1>
+            <p className="text-slate-600 mt-2">
+              Let's continue your learning journey.
+            </p>
           </div>
-          {/* Navigation */}
-          <nav className={`${isMenuOpen ? 'block' : 'hidden'} md:block mt-4 md:mt-0`}>
-            <button className="w-full px-5 py-2 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors md:w-auto">
-              Logout
-            </button>
-          </nav>
+          <button
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
+            className="mt-4 w-full md:w-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          >
+            Logout
+          </button>
         </header>
 
-        {/* Enrolled Workshops Section */}
+        {/* Available Workshops Section */}
         <section>
           <h2 className="text-2xl font-bold mb-6 text-slate-700">
-            Your Enrolled Workshops
+            Available Workshops
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {enrolledWorkshops.map((workshop) => (
-              <div key={workshop.id} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
-                <img src={workshop.image} alt={workshop.title} className="w-full h-40 object-cover" />
-                <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold mb-4">{workshop.title}</h3>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${workshop.progress}%` }}></div>
+            {workshops.length > 0 ? (
+              workshops.map((workshop) => (
+                <div key={workshop._id} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+                  {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-40 object-cover" />}
+                  <div className="p-6 flex flex-col flex-grow">
+                    <h3 className="text-xl font-bold mb-2">{workshop.title}</h3>
+                    <p className="text-slate-600 text-sm mb-4 flex-grow">{workshop.description}</p>
+                    <p className="text-sm text-slate-500 mb-4">Date: {workshop.date}</p>
+                    <button
+                      onClick={() => handleWorkshopRegistration(workshop._id)}
+                      disabled={workshop.registrations?.includes(user?.email)}
+                      className={`mt-auto self-start inline-block px-5 py-2 font-semibold rounded-lg transition-colors ${
+                        workshop.registrations?.includes(user?.email)
+                          ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                          : "bg-blue-600 text-white hover:bg-blue-500"
+                      }`}
+                    >
+                      {workshop.registrations?.includes(user?.email)
+                        ? "Registered"
+                        : "Register Now"}
+                    </button>
                   </div>
-                  <p className="text-sm text-slate-500 mb-4">{workshop.progress}% Complete</p>
-                  <button className="mt-auto self-start inline-block px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition-colors">Continue Learning</button>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No workshops available yet. Check back later!</p>
+            )}
           </div>
         </section>
       </div>
     </div>
   );
 }
+
