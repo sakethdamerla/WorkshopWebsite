@@ -4,9 +4,15 @@ import bcrypt from 'bcryptjs'; // Import bcryptjs
 
 const router = express.Router();
 
+// It's highly insecure to store passwords in plaintext.
+// You should store a hash of the admin password.
+// Generate a hash for your admin password using a script:
+// console.log(require('bcryptjs').hashSync('your-secure-password', 10));
+// I've generated a hash for the password "123" for you.
 const admin = {
-  email: "admin@workshop.com",
-  password: "admin123", // This password will be compared directly for admin
+  email: "admin@123",
+  // This is the bcrypt hash for the password "123"
+  password: "$2a$10$zFr5Mo82qu0YQzIHAteOtejb89imE5.E4JH0UzCNT3LmkNDGVS3tO",
 };
 
 // REGISTER
@@ -33,47 +39,56 @@ router.post("/register", async (req, res) => {
 // LOGIN
 router.post("/login", async (req, res) => {
   const { email, password, role } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+  if (!email || !password || !role) {
+    return res.status(400).json({ message: "Email, password, and role are required" });
   }
 
-  // Admin login
-  if (email === admin.email && password === admin.password && role === "admin") {
-    return res.json({
-      user: { email: admin.email, role: "admin" },
-      message: "Admin login successful",
+  // Admin login check
+  if (role === "admin") {
+    if (email === admin.email) {
+      const isMatch = await bcrypt.compare(password, admin.password);
+      if (isMatch) {
+        return res.json({
+          user: { email: admin.email, role: "admin" },
+          message: "Admin login successful",
+        });
+      }
+    }
+    // Generic message for admin to prevent email enumeration
+    return res.status(401).json({
+      message: "Invalid admin credentials.",
     });
   }
 
-  try {
-    const student = await Student.findOne({ email }); // Find student by email
-    if (!student) {
-      return res.status(401).json({
-        message: "Invalid credentials. Please register first or check your password.",
-      });
-    }
+  // Student login
+  if (role === "student") {
+    try {
+      const student = await Student.findOne({ email }); // Find student by email
+      if (!student) {
+        return res.status(401).json({
+          message: "Invalid credentials. Please check your email and password.",
+        });
+      }
 
-    // Compare provided password with hashed password
-    const isMatch = await bcrypt.compare(password, student.password);
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid credentials. Please register first or check your password.",
-      });
-    }
+      // Compare provided password with hashed password
+      const isMatch = await bcrypt.compare(password, student.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          message: "Invalid credentials. Please check your email and password.",
+        });
+      }
 
-    // Student login
-    if (role === "student") {
       return res.json({
         user: { email: student.email, role: "student", _id: student._id, name: student.name },
         message: "Student login successful",
       });
-    } else {
-      return res.status(401).json({ message: "Invalid role for student login." });
+    } catch (error) {
+      console.error("Error logging in student:", error);
+      return res.status(500).json({ message: "Failed to login student." });
     }
-  } catch (error) {
-    console.error("Error logging in student:", error);
-    res.status(500).json({ message: "Failed to login student." });
   }
+
+  return res.status(400).json({ message: "Invalid role specified." });
 });
 
 export default router;

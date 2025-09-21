@@ -6,7 +6,6 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("student");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -17,6 +16,7 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+    const role = "student"; // Always register as a student
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
@@ -86,18 +86,6 @@ export default function Register() {
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-600">Role</label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="student">Student</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}

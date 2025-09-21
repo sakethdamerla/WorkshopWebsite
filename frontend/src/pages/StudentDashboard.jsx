@@ -50,7 +50,7 @@ export default function StudentDashboard() {
       }
     } catch (error) {
       console.error("Error registering for workshop:", error);
-      alert("Failed to register for workshop.");
+      alert("You are registred for this Workshop.");
     }
   };
 
