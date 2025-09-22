@@ -1,13 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 
-const TypingEffect = ({ text, className }) => {
+const TypingEffect = ({ text, className, enabled = true }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const handleTyping = () => {
       const i = loopNum % text.length;
       const fullText = text[i];
@@ -18,7 +19,7 @@ const TypingEffect = ({ text, className }) => {
           : fullText.substring(0, displayedText.length + 1)
       );
 
-      setTypingSpeed(isDeleting ? 10 : 100);
+      setTypingSpeed(isDeleting ? 30 : 150);
 
       if (!isDeleting && displayedText === fullText) {
         setTimeout(() => setIsDeleting(true), 500);
@@ -30,7 +31,11 @@ const TypingEffect = ({ text, className }) => {
 
     const typingTimeout = setTimeout(handleTyping, typingSpeed);
     return () => clearTimeout(typingTimeout);
-  }, [displayedText, isDeleting, loopNum, text, typingSpeed]);
+  }, [displayedText, isDeleting, loopNum, text, typingSpeed, enabled]);
+
+  if (!enabled) {
+    return <h1 className={className}>{text[0]}</h1>;
+  }
 
   return (
     <h1 className={`${className} transition-opacity duration-500`}>

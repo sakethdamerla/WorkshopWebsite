@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
+import Countdown from "../components/Countdown";
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -127,7 +128,7 @@ export default function StudentDashboard() {
                     <div className="p-6 flex flex-col flex-grow">
                       <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
                       <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                      <p className="text-sm text-neutral-500 mb-6">Date: {workshop.date}</p>
+                      <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
                       <button
                         onClick={() => handleWorkshopRegistration(workshop._id)}
                         disabled={workshop.registrations?.includes(user?.email)}
@@ -165,8 +166,11 @@ export default function StudentDashboard() {
                     <div className="p-6 flex flex-col flex-grow">
                       <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
                       <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                      <p className="text-sm text-neutral-500 mb-6">Date: {workshop.date}</p>
-                      <span className="mt-auto self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-green-500 text-white">
+                      <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                      <div className="mt-auto">
+                        <Countdown date={workshop.date} />
+                      </div>
+                      <span className="mt-4 self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-green-500 text-white">
                         Registered
                       </span>
                     </div>
