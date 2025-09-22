@@ -45,41 +45,43 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 p-7">
-      <div className="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Welcome Back</h2>
+    <div className="min-h-screen flex items-center justify-center bg-neutral-100 p-4">
+      <div className="max-w-md w-full mx-auto p-8 bg-white rounded-2xl shadow-lg">
+        <h2 className="text-3xl font-bold text-center text-neutral-900 mb-6">
+          Welcome Back
+        </h2>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="text-sm font-medium text-gray-600">Email</label>
+            <label className="text-sm font-medium text-neutral-700">Email</label>
             <input
               type="email"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
               required
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-600">Password</label>
+            <label className="text-sm font-medium text-neutral-700">Password</label>
             <input
               type="password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
               required
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-600">Role</label>
+            <label className="text-sm font-medium text-neutral-700">Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
             >
               <option value="student">Student</option>
               <option value="admin">Admin</option>
@@ -88,14 +90,14 @@ export default function Login() {
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-          <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
+          <button className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300">
             Login
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
+        <p className="mt-8 text-center text-neutral-600">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline font-medium">
+          <Link to="/register" className="text-primary hover:underline font-medium">
             Register
           </Link>
         </p>

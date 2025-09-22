@@ -1,15 +1,13 @@
-import { useAuth } from "../AuthContext";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function AdminDashboard() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [date, setDate] = useState("");
   const [workshops, setWorkshops] = useState([]);
+  const [view, setView] = useState("workshops"); // workshops, create
+  const [expandedWorkshopId, setExpandedWorkshopId] = useState(null);
 
   const fetchWorkshops = async () => {
     try {
@@ -31,11 +29,6 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -54,6 +47,7 @@ export default function AdminDashboard() {
         setImage("");
         setDate("");
         fetchWorkshops();
+        setView("workshops");
       } else {
         alert(data.message);
       }
@@ -87,131 +81,133 @@ export default function AdminDashboard() {
     }
   };
 
+  const toggleRegistrations = (workshopId) => {
+    setExpandedWorkshopId(expandedWorkshopId === workshopId ? null : workshopId);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 text-neutral-800">
       <div className="container mx-auto p-8">
         <header className="md:flex md:items-center md:justify-between mb-12">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold">Admin Dashboard</h1>
-            <p className="text-slate-600 mt-2">Welcome Admin! Here you can manage students and workshops.</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900">Admin Dashboard</h1>
+            {/* <p className="text-neutral-600 mt-2 text-lg">Welcome Admin! Here you can manage students and workshops.</p> */}
           </div>
-          <button
-            onClick={handleLogout}
-            className="mt-4 w-full md:w-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-          >
-            Logout
-          </button>
+          <div>
+            <button onClick={() => setView("workshops")} className="mr-4 px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">All Workshops</button>
+            <button onClick={() => setView("create")} className="px-6 py-3 bg-secondary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">Create Workshop</button>
+          </div>
         </header>
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-slate-700">Create New Workshop</h2>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-                <input
-                  type="text"
-                  id="title"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  id="description"
-                  rows="3"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  required
-                ></textarea>
-              </div>
-              <div>
-                <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                <input
-                  type="url"
-                  id="image"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
-                <input
-                  type="date"
-                  id="date"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Create Workshop
-              </button>
-            </form>
-          </div>
-        </section>
 
-        <section>
-          <h2 className="text-2xl font-bold mb-6 text-slate-700">Manage Workshops</h2>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            {workshops.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Title
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Registrations
-                      </th>
-                      <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Actions</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {workshops.map((workshop) => (
-                      <tr key={workshop._id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {workshop.title}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(workshop.date).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {workshop.registrations ? workshop.registrations.length : 0}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            onClick={() => handleDelete(workshop._id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <p className="text-slate-600">No workshops created yet.</p>
-            )}
-          </div>
-        </section>
+        {view === "create" && (
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold mb-8 text-neutral-800">Create New Workshop</h2>
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium text-neutral-700">Title</label>
+                  <input
+                    type="text"
+                    id="title"
+                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-neutral-700">Description</label>
+                  <textarea
+                    id="description"
+                    rows="4"
+                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                  ></textarea>
+                </div>
+                <div>
+                  <label htmlFor="image" className="block text-sm font-medium text-neutral-700">Image URL</label>
+                  <input
+                    type="url"
+                    id="image"
+                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="date" className="block text-sm font-medium text-neutral-700">Date</label>
+                  <input
+                    type="date"
+                    id="date"
+                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                >
+                  Create Workshop
+                </button>
+              </form>
+            </div>
+          </section>
+        )}
+
+        {view === "workshops" && (
+          <section>
+            <h2 className="text-3xl font-bold mb-8 text-neutral-800">Manage Workshops</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {workshops.length > 0 ? (
+                workshops.map((workshop) => (
+                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-32 object-cover" />}
+                    <div className="p-4 flex flex-col flex-grow">
+                      <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                      <p className="text-sm text-neutral-500 mb-2">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                      <p className="text-sm text-neutral-600 mb-4 flex-grow">Registrations: {workshop.registrations ? workshop.registrations.length : 0}</p>
+                      <div className="flex flex-row space-x-2">
+                        <button
+                          onClick={() => toggleRegistrations(workshop._id)}
+                          className="w-full px-4 py-2 text-sm bg-blue-300 text-black rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
+                        >
+                          {expandedWorkshopId === workshop._id ? "Hide Registrations" : "View Registrations"}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(workshop._id)}
+                          className="w-full px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      {expandedWorkshopId === workshop._id && (
+                        <div className="mt-4 pt-4 border-t border-neutral-200">
+                          <h4 className="font-semibold mb-2 text-neutral-800">Registered Users:</h4>
+                          {workshop.registrations && workshop.registrations.length > 0 ? (
+                            <ul className="list-disc list-inside text-sm text-neutral-700">
+                              {workshop.registrations.map((email, index) => (
+                                <li key={index}>{email}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-neutral-600 text-sm">No registrations for this workshop yet.</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-neutral-600 text-lg">No workshops created yet.</p>
+              )}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

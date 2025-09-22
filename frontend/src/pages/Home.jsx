@@ -34,37 +34,37 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 text-black">
-      <div className="container mx-auto p-8">
-        <header className="text-center my-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Welcome to the AI Workshop
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 text-neutral-800">
+      <div className="container mx-auto px-4 py-8">
+        <header className="text-center my-16">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 text-neutral-900">
+            Welcome to the <span className="text-primary">AI</span> Workshop
           </h1>
-          <p className="text-slate-600 max-w-2xl mx-auto">
+          <p className="text-neutral-600 max-w-3xl mx-auto text-lg">
             Explore the future of technology with our hands-on workshops led by
-            industry experts.
+            industry experts. Level up your skills and build amazing things.
           </p>
         </header>
 
-        <h2 className="text-xl font-bold mb-4 text-slate-700">
+        <h2 className="text-3xl font-bold mb-8 text-neutral-800 text-center">
           Upcoming Workshops
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {workshops.length > 0 ? (
             workshops.map((workshop) => (
               <div
                 key={workshop._id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl flex flex-col"
+                className="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl flex flex-col group"
               >
-                {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-40 object-cover" />}
+                {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold mb-2">{workshop.title}</h3>
-                  <p className="text-slate-600 mb-4 flex-grow">{workshop.description}</p>
-                  <p className="text-sm text-slate-500 mb-4">Date: {workshop.date}</p>
+                  <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                  <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
+                  <p className="text-sm text-neutral-500 mb-6">Date: {workshop.date}</p>
                   <Link
                     to={`/register/${workshop._id}`}
-                    className="mt-auto self-start inline-block px-5 py-2 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-700 transition-colors"
+                    className="mt-auto self-start inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-opacity-90 transition-colors duration-300"
                   >
                     Register Now
                   </Link>
@@ -72,7 +72,7 @@ const Home = () => {
               </div>
             ))
           ) : (
-            <p className="col-span-full text-center text-slate-600">No workshops available yet. Check back later!</p>
+            <p className="col-span-full text-center text-neutral-600 text-lg">No workshops available yet. Check back later!</p>
           )}
         </div>
       </div>
