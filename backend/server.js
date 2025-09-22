@@ -21,10 +21,40 @@ app.use(cors());
 app.use(express.json());
 
 // -------------------- DB CONNECTION --------------------
+console.log("Attempting to connect to MongoDB...");
 console.log("MONGO_URI from .env:", process.env.MONGO_URI);
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+  } catch (err) {
+    console.error("❌ Initial MongoDB connection error:", err);
+    // Exit process with failure
+    process.exit(1);
+  }
+};
+
+mongoose.connection.on('connecting', () => {
+  console.log('MongoDB: connecting...');
+});
+
+mongoose.connection.on('connected', () => {
+  console.log('✅ MongoDB connected');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error("❌ MongoDB connection error:", err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected. Attempting to reconnect...');
+});
+
+mongoose.connection.on('reconnected', () => {
+  console.log('✅ MongoDB reconnected');
+});
+
+connectDB();
 
 // -------------------- API ROUTES --------------------
 // Example routes (you can replace with your real ones)

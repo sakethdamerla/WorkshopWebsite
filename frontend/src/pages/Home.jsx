@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import TypingEffect from "../components/TypingEffect";
 
 const Home = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -37,9 +38,12 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 text-neutral-800">
       <div className="container mx-auto px-4 py-8">
         <header className="text-center my-16">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 text-neutral-900">
-            Welcome to the <span className="text-primary">AI</span> Workshop
-          </h1>
+          <TypingEffect
+            text={[
+              "Welcome to the AI Workshop"
+            ]}
+            className="text-5xl md:text-7xl font-extrabold mb-4 text-neutral-900 h-24"
+          />
           <p className="text-neutral-600 max-w-3xl mx-auto text-lg">
             Explore the future of technology with our hands-on workshops led by
             industry experts. Level up your skills and build amazing things.
