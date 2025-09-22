@@ -19,9 +19,7 @@ export default function Header() {
     <header className="bg-neutral-900 text-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="text-2xl font-bold">
-          <Link to="/">
-            <span className="text-blue-100">AI</span> Workshop
-          </Link>
+            Workshop
         </div>
         <div className="md:hidden">
           <button
@@ -55,7 +53,7 @@ export default function Header() {
               <li>
                 <Link
                   to="/"
-                  className="block py-2 px-4 text-lg hover:text-blue-300 transition-colors duration-300"
+                  className="block py-2 px-4 text-lg hover:text-blue-200 transition-colors duration-300"
                 >
                   Home
                 </Link>
@@ -66,7 +64,7 @@ export default function Header() {
                 <li>
                   <Link
                     to="/login"
-                    className="block py-2 px-4 text-lg hover:text-blue-300 transition-colors duration-300"
+                    className="block py-2 px-4 text-lg hover:text-blue-200 transition-colors duration-300"
                   >
                     Login
                   </Link>

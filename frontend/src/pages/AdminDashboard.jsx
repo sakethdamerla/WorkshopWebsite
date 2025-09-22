@@ -13,6 +13,7 @@ export default function AdminDashboard() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/workshops`);
       const data = await response.json();
+      console.log("Workshops data received:", data); // Add this line
       if (response.ok) {
         setWorkshops(data);
       } else {
@@ -90,22 +91,22 @@ export default function AdminDashboard() {
       <div className="container mx-auto p-8">
         <header className="md:flex md:items-center md:justify-between mb-12">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900">Admin Dashboard</h1>
+            <h1 className="text-4xl md:text-5xl mb-6 font-bold text-neutral-900">Admin Dashboard</h1>
             {/* <p className="text-neutral-600 mt-2 text-lg">Welcome Admin! Here you can manage students and workshops.</p> */}
           </div>
           <div>
-            <button onClick={() => setView("workshops")} className="mr-4 px-6 py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">All Workshops</button>
-            <button onClick={() => setView("create")} className="px-6 py-3 bg-secondary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">Create Workshop</button>
+            <button onClick={() => setView("workshops")} className="mr-4 mb-2 sm:mb-0 px-4 py-2 sm:px-6 sm:py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">All Workshops</button>
+            <button onClick={() => setView("create")} className="px-4 py-2 sm:px-6 sm:py-3 bg-secondary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">Create Workshop</button>
           </div>
         </header>
 
         {view === "create" && (
           <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-8 text-neutral-800">Create New Workshop</h2>
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-xl -mx-6 font-bold mb-8 text-neutral-800 text-center">Create New Workshop</h2>
+            <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mx-auto max-w-md">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="title" className="block text-sm font-medium text-neutral-700">Title</label>
+                  <label htmlFor="title" className="block text-xs sm:text-sm font-medium text-neutral-700">Title</label>
                   <input
                     type="text"
                     id="title"
@@ -116,11 +117,11 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-neutral-700">Description</label>
+                  <label htmlFor="description" className="block text-xs sm:text-sm font-medium text-neutral-700">Description</label>
                   <textarea
                     id="description"
                     rows="4"
-                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    className="w-full p-2 sm:p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     required
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
                   <input
                     type="url"
                     id="image"
-                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    className="w-full p-2 sm:p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
                     required
@@ -142,7 +143,7 @@ export default function AdminDashboard() {
                   <input
                     type="date"
                     id="date"
-                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                    className="w-full p-2 sm:p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     required
@@ -150,7 +151,7 @@ export default function AdminDashboard() {
                 </div>
                 <button
                   type="submit"
-                  className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  className="inline-flex justify-center py-2 px-4 sm:py-3 sm:px-6 border border-transparent shadow-sm text-sm sm:text-base font-medium rounded-lg text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
                   Create Workshop
                 </button>
@@ -161,7 +162,7 @@ export default function AdminDashboard() {
 
         {view === "workshops" && (
           <section>
-            <h2 className="text-3xl font-bold mb-8 text-neutral-800">Manage Workshops</h2>
+            <h2 className="text-2xl font-bold mb-8 text-neutral-800">Manage Workshops</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {workshops.length > 0 ? (
                 workshops.map((workshop) => (
@@ -204,6 +205,56 @@ export default function AdminDashboard() {
                 ))
               ) : (
                 <p className="text-neutral-600 text-lg">No workshops created yet.</p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {view === "registeredEvents" && (
+          <section>
+            <h2 className="text-2xl font-bold mb-8 text-neutral-800">Registered Workshops</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {workshops.filter(workshop => workshop.registrations && workshop.registrations.length > 0).length > 0 ? (
+                workshops.filter(workshop => workshop.registrations && workshop.registrations.length > 0).map((workshop) => (
+                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-32 object-cover" />}
+                    <div className="p-4 flex flex-col flex-grow">
+                      <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                      <p className="text-sm text-neutral-500 mb-2">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                      <p className="text-sm text-neutral-600 mb-4 flex-grow">Registrations: {workshop.registrations ? workshop.registrations.length : 0}</p>
+                      <div className="flex flex-row space-x-2">
+                        <button
+                          onClick={() => toggleRegistrations(workshop._id)}
+                          className="w-full px-4 py-2 text-sm bg-blue-300 text-black rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
+                        >
+                          {expandedWorkshopId === workshop._id ? "Hide Registrations" : "View Registrations"}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(workshop._id)}
+                          className="w-full px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      {expandedWorkshopId === workshop._id && (
+                        <div className="mt-4 pt-4 border-t border-neutral-200">
+                          <h4 className="font-semibold mb-2 text-neutral-800">Registered Users:</h4>
+                          {workshop.registrations && workshop.registrations.length > 0 ? (
+                            <ul className="list-disc list-inside text-sm text-neutral-700">
+                              {workshop.registrations.map((email, index) => (
+                                <li key={index}>{email}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-neutral-600 text-sm">No registrations for this workshop yet.</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-neutral-600 text-lg">No registered workshops found.</p>
               )}
             </div>
           </section>

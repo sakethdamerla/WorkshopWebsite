@@ -8,8 +8,12 @@ const router = express.Router();
 // Get all workshops
 router.get('/', async (req, res) => {
   try {
-    const workshops = await Workshop.find();
-    res.json(workshops);
+    const workshops = await Workshop.find().populate('registrations');
+    const formattedWorkshops = workshops.map(workshop => ({
+      ...workshop.toObject(),
+      registrations: workshop.registrations.map(reg => reg.email) // Assuming 'email' is a field in your Student model
+    }));
+    res.json(formattedWorkshops);
   } catch (error) {
     console.error('Error fetching workshops:', error);
     res.status(500).json({ message: 'Failed to fetch workshops.' });
@@ -72,13 +76,33 @@ router.post('/:workshopId/register', async (req, res) => {
         const newRegistration = new Registration({ student: student._id, workshop: workshop._id });
         await newRegistration.save();
 
-        workshop.registrations.push(studentEmail);
+        workshop.registrations.push(student._id);
         await workshop.save();
 
-        res.status(200).json({ message: "Successfully registered!", registration: newRegistration });
+        res.status(200).json({ message: "Successfully registered!" });
     } catch (error) {
-        console.error("Error registering for workshop:", error);
+        console.error("Detailed error during registration:", error);
         res.status(500).json({ message: "Failed to register for workshop." });
+    }
+});
+
+// Get registered workshops for a student
+router.get('/registered-workshops/:email', async (req, res) => {
+    try {
+        const studentEmail = req.params.email;
+        const student = await Student.findOne({ email: studentEmail });
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found." });
+        }
+
+        const registrations = await Registration.find({ student: student._id }).populate('workshop');
+        const registeredWorkshops = registrations.map(reg => reg.workshop);
+
+        res.status(200).json(registeredWorkshops);
+    } catch (error) {
+        console.error("Error fetching registered workshops:", error);
+        res.status(500).json({ message: "Failed to fetch registered workshops." });
     }
 });
 
