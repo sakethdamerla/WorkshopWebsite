@@ -68,7 +68,7 @@ export default function StudentDashboard() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ studentEmail: user.email }),
+        body: JSON.stringify({ studentEmail: user.email, phoneNumber: user.mobile }),
       });
       console.log("Registration response.ok:", response.ok);
       const data = await response.json();

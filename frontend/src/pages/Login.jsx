@@ -5,7 +5,7 @@ import { useAuth } from "../AuthContext"; // Import useAuth
 import { FaHome } from "react-icons/fa";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [emailOrMobile, setEmailOrMobile] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
   const [error, setError] = useState("");
@@ -22,7 +22,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, role }),
+        body: JSON.stringify({ email: emailOrMobile, password, role }),
       });
 
       const data = await response.json();
@@ -32,6 +32,7 @@ export default function Login() {
         return;
       }
 
+      console.log("Login.jsx: User data from backend:", data.user); // Added for debugging
       login(data.user);
 
       if (data.user.role === "admin") {
@@ -48,7 +49,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100 p-4">
       <div className="relative max-w-md w-full mx-auto p-8 bg-white rounded-2xl shadow-lg">
-        <Link to="/" className="absolute top-9 left- text-black hover:text-primary text-2xl">
+        <Link to="/" className="absolute top-9 left-4 text-black hover:text-primary text-2xl">
           <FaHome />
         </Link>
         <h2 className="text-3xl font-bold text-center text-neutral-900 mb-6">
@@ -57,12 +58,12 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="text-sm font-medium text-neutral-700">Email</label>
+            <label className="text-sm font-medium text-neutral-700">Email or Mobile Number</label>
             <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="you@example.com or 123-456-7890"
+              value={emailOrMobile}
+              onChange={(e) => setEmailOrMobile(e.target.value)}
               className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
               required
             />

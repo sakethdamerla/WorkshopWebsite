@@ -17,17 +17,17 @@ const admin = {
 
 // REGISTER
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phoneNumber } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
-    const existingStudent = await Student.findOne({ email });
+    const existingStudent = await Student.findOne({ $or: [{ email }, { phoneNumber }] });
     if (existingStudent) {
-      return res.status(400).json({ message: "Student already registered" });
+      return res.status(400).json({ message: "Student with this email or phone number already registered" });
     }
     // Password hashing is now handled by the pre-save hook in the Student model
-    const newStudent = new Student({ name, email, password });
+    const newStudent = new Student({ name, email, password, mobile: phoneNumber });
     await newStudent.save();
     res.status(201).json({ message: "Student registered successfully" });
   } catch (error) {
@@ -39,8 +39,8 @@ router.post("/register", async (req, res) => {
 // LOGIN
 router.post("/login", async (req, res) => {
   const { email, password, role } = req.body;
-  if (!email || !password || !role) {
-    return res.status(400).json({ message: "Email, password, and role are required" });
+  if ((!email) || !password || !role) {
+    return res.status(400).json({ message: "Email/Mobile, password, and role are required" });
   }
 
   // Admin login check
@@ -63,10 +63,10 @@ router.post("/login", async (req, res) => {
   // Student login
   if (role === "student") {
     try {
-      const student = await Student.findOne({ email }); // Find student by email
+      const student = await Student.findOne({ $or: [{ email: email }, { mobile: email }] }); // Find student by email or mobile
       if (!student) {
         return res.status(401).json({
-          message: "Invalid credentials. Please check your email and password.",
+          message: "Invalid credentials. Please check your email/mobile and password.",
         });
       }
 
@@ -74,12 +74,12 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, student.password);
       if (!isMatch) {
         return res.status(401).json({
-          message: "Invalid credentials. Please check your email and password.",
+          message: "Invalid credentials. Please check your email/mobile and password.",
         });
       }
 
       return res.json({
-        user: { email: student.email, role: "student", _id: student._id, name: student.name },
+        user: { email: student.email, role: "student", _id: student._id, name: student.name, mobile: student.mobile },
         message: "Student login successful",
       });
     } catch (error) {

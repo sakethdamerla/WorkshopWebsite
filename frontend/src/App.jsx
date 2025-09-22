@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import WorkshopRegistrations from "./pages/WorkshopRegistrations";
 import Header from "./components/Header";
 import { AuthProvider } from "./AuthContext";
 import "./index.css"
@@ -32,6 +33,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-dashboard/workshop/:workshopId/registrations" element={<WorkshopRegistrations />} />
       </Routes>
     </div>
   );

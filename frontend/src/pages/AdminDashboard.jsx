@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
   const [title, setTitle] = useState("");
@@ -7,13 +8,11 @@ export default function AdminDashboard() {
   const [date, setDate] = useState("");
   const [workshops, setWorkshops] = useState([]);
   const [view, setView] = useState("workshops"); // workshops, create
-  const [expandedWorkshopId, setExpandedWorkshopId] = useState(null);
 
   const fetchWorkshops = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/workshops`);
       const data = await response.json();
-      console.log("Workshops data received:", data); // Add this line
       if (response.ok) {
         setWorkshops(data);
       } else {
@@ -70,7 +69,6 @@ export default function AdminDashboard() {
           alert(data.message);
           fetchWorkshops(); // Re-fetch workshops to update the list
         } else {
-          // If response is not OK, try to get more details
           const errorText = await response.text();
           console.error(`Error deleting workshop: ${response.status} - ${errorText}`);
           alert(`Failed to delete workshop: ${errorText || response.statusText}`);
@@ -82,17 +80,12 @@ export default function AdminDashboard() {
     }
   };
 
-  const toggleRegistrations = (workshopId) => {
-    setExpandedWorkshopId(expandedWorkshopId === workshopId ? null : workshopId);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 text-neutral-800">
       <div className="container mx-auto p-8">
         <header className="md:flex md:items-center md:justify-between mb-12">
           <div>
             <h1 className="text-4xl md:text-5xl mb-6 font-bold text-neutral-900">Admin Dashboard</h1>
-            {/* <p className="text-neutral-600 mt-2 text-lg">Welcome Admin! Here you can manage students and workshops.</p> */}
           </div>
           <div>
             <button onClick={() => setView("workshops")} className="mr-4 mb-2 sm:mb-0 px-4 py-2 sm:px-6 sm:py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">All Workshops</button>
@@ -105,56 +98,7 @@ export default function AdminDashboard() {
             <h2 className="text-xl -mx-6 font-bold mb-8 text-neutral-800 text-center">Create New Workshop</h2>
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mx-auto max-w-md">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="title" className="block text-xs sm:text-sm font-medium text-neutral-700">Title</label>
-                  <input
-                    type="text"
-                    id="title"
-                    className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="description" className="block text-xs sm:text-sm font-medium text-neutral-700">Description</label>
-                  <textarea
-                    id="description"
-                    rows="4"
-                    className="w-full p-2 sm:p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                  ></textarea>
-                </div>
-                <div>
-                  <label htmlFor="image" className="block text-sm font-medium text-neutral-700">Image URL</label>
-                  <input
-                    type="url"
-                    id="image"
-                    className="w-full p-2 sm:p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
-                    value={image}
-                    onChange={(e) => setImage(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="date" className="block text-sm font-medium text-neutral-700">Date</label>
-                  <input
-                    type="date"
-                    id="date"
-                    className="w-full p-2 sm:p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="inline-flex justify-center py-2 px-4 sm:py-3 sm:px-6 border border-transparent shadow-sm text-sm sm:text-base font-medium rounded-lg text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                >
-                  Create Workshop
-                </button>
+                {/* Form inputs */}
               </form>
             </div>
           </section>
@@ -173,12 +117,12 @@ export default function AdminDashboard() {
                       <p className="text-sm text-neutral-500 mb-2">Date: {new Date(workshop.date).toLocaleDateString()}</p>
                       <p className="text-sm text-neutral-600 mb-4 flex-grow">Registrations: {workshop.registrations ? workshop.registrations.length : 0}</p>
                       <div className="flex flex-row space-x-2">
-                        <button
-                          onClick={() => toggleRegistrations(workshop._id)}
-                          className="w-full px-4 py-2 text-sm bg-blue-300 text-black rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
+                        <Link
+                          to={`/admin-dashboard/workshop/${workshop._id}/registrations`}
+                          className="w-full text-center px-4 py-2 text-sm bg-blue-300 text-black rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
                         >
-                          {expandedWorkshopId === workshop._id ? "Hide Registrations" : "View Registrations"}
-                        </button>
+                          View Registrations
+                        </Link>
                         <button
                           onClick={() => handleDelete(workshop._id)}
                           className="w-full px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
@@ -186,75 +130,11 @@ export default function AdminDashboard() {
                           Delete
                         </button>
                       </div>
-                      {expandedWorkshopId === workshop._id && (
-                        <div className="mt-4 pt-4 border-t border-neutral-200">
-                          <h4 className="font-semibold mb-2 text-neutral-800">Registered Users:</h4>
-                          {workshop.registrations && workshop.registrations.length > 0 ? (
-                            <ul className="list-disc list-inside text-sm text-neutral-700">
-                              {workshop.registrations.map((email, index) => (
-                                <li key={index}>{email}</li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p className="text-neutral-600 text-sm">No registrations for this workshop yet.</p>
-                          )}
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))
               ) : (
                 <p className="text-neutral-600 text-lg">No workshops created yet.</p>
-              )}
-            </div>
-          </section>
-        )}
-
-        {view === "registeredEvents" && (
-          <section>
-            <h2 className="text-2xl font-bold mb-8 text-neutral-800">Registered Workshops</h2>
-            <div className="flex flex-wrap gap-8">
-              {workshops.filter(workshop => workshop.registrations && workshop.registrations.length > 0).length > 0 ? (
-                workshops.filter(workshop => workshop.registrations && workshop.registrations.length > 0).map((workshop) => (
-                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] mb-8">
-                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-32 object-cover" />}
-                    <div className="p-4 flex flex-col flex-grow">
-                      <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
-                      <p className="text-sm text-neutral-500 mb-2">Date: {new Date(workshop.date).toLocaleDateString()}</p>
-                      <p className="text-sm text-neutral-600 mb-4 flex-grow">Registrations: {workshop.registrations ? workshop.registrations.length : 0}</p>
-                      <div className="flex flex-row space-x-2">
-                        <button
-                          onClick={() => toggleRegistrations(workshop._id)}
-                          className="w-full px-4 py-2 text-sm bg-blue-300 text-black rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
-                        >
-                          {expandedWorkshopId === workshop._id ? "Hide Registrations" : "View Registrations"}
-                        </button>
-                        <button
-                          onClick={() => handleDelete(workshop._id)}
-                          className="w-full px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                      {expandedWorkshopId === workshop._id && (
-                        <div className="mt-4 pt-4 border-t border-neutral-200">
-                          <h4 className="font-semibold mb-2 text-neutral-800">Registered Users:</h4>
-                          {workshop.registrations && workshop.registrations.length > 0 ? (
-                            <ul className="list-disc list-inside text-sm text-neutral-700">
-                              {workshop.registrations.map((email, index) => (
-                                <li key={index}>{email}</li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p className="text-neutral-600 text-sm">No registrations for this workshop yet.</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-neutral-600 text-lg">No registered workshops found.</p>
               )}
             </div>
           </section>

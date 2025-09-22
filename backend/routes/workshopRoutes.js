@@ -57,9 +57,9 @@ router.delete('/:workshopId', async (req, res) => {
 // Register a student for a workshop
 router.post('/:workshopId/register', async (req, res) => {
     const workshopId = req.params.workshopId;
-    const { studentEmail } = req.body;
-    if (!studentEmail) {
-        return res.status(400).json({ message: "Student email is required." });
+    const { studentEmail, phoneNumber } = req.body;
+    if (!studentEmail || !phoneNumber) {
+        return res.status(400).json({ message: "Student email and phone number are required." });
     }
     try {
         const student = await Student.findOne({ email: studentEmail });
@@ -73,7 +73,7 @@ router.post('/:workshopId/register', async (req, res) => {
             return res.status(409).json({ message: "Student already registered for this workshop." });
         }
 
-        const newRegistration = new Registration({ student: student._id, workshop: workshop._id });
+        const newRegistration = new Registration({ student: student._id, workshop: workshop._id, phoneNumber });
         await newRegistration.save();
 
         workshop.registrations.push(student._id);
@@ -103,6 +103,34 @@ router.get('/registered-workshops/:email', async (req, res) => {
     } catch (error) {
         console.error("Error fetching registered workshops:", error);
         res.status(500).json({ message: "Failed to fetch registered workshops." });
+    }
+});
+
+// Get all registrations for a specific workshop
+router.get('/:workshopId/registrations', async (req, res) => {
+    try {
+        const workshopId = req.params.workshopId;
+        const registrations = await Registration.find({ workshop: workshopId })
+            .populate({
+                path: 'student',
+                select: 'name email' // Select specific fields from the student
+            })
+            .populate('workshop');
+
+        // Format the registrations to include student details and phone number
+        const formattedRegistrations = registrations.map(reg => ({
+            _id: reg._id,
+            studentName: reg.student ? reg.student.name : 'N/A',
+            studentEmail: reg.student ? reg.student.email : 'N/A',
+            phoneNumber: reg.phoneNumber,
+            registeredAt: reg.registeredAt,
+            workshopTitle: reg.workshop ? reg.workshop.title : 'N/A',
+        }));
+
+        res.status(200).json({ registrations: formattedRegistrations });
+    } catch (error) {
+        console.error("Error fetching workshop registrations:", error);
+        res.status(500).json({ message: "Failed to fetch workshop registrations." });
     }
 });
 
