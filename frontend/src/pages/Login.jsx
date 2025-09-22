@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext"; // Import useAuth
+import { FaHome } from "react-icons/fa";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -46,7 +47,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100 p-4">
-      <div className="max-w-md w-full mx-auto p-8 bg-white rounded-2xl shadow-lg">
+      <div className="relative max-w-md w-full mx-auto p-8 bg-white rounded-2xl shadow-lg">
+        <Link to="/" className="absolute top-9 left- text-black hover:text-primary text-2xl">
+          <FaHome />
+        </Link>
         <h2 className="text-3xl font-bold text-center text-neutral-900 mb-6">
           Welcome Back
         </h2>

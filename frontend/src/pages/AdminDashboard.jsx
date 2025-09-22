@@ -163,10 +163,10 @@ export default function AdminDashboard() {
         {view === "workshops" && (
           <section>
             <h2 className="text-2xl font-bold mb-8 text-neutral-800">Manage Workshops</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex flex-wrap gap-8">
               {workshops.length > 0 ? (
                 workshops.map((workshop) => (
-                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] mb-8">
                     {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-32 object-cover" />}
                     <div className="p-4 flex flex-col flex-grow">
                       <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
@@ -213,10 +213,10 @@ export default function AdminDashboard() {
         {view === "registeredEvents" && (
           <section>
             <h2 className="text-2xl font-bold mb-8 text-neutral-800">Registered Workshops</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex flex-wrap gap-8">
               {workshops.filter(workshop => workshop.registrations && workshop.registrations.length > 0).length > 0 ? (
                 workshops.filter(workshop => workshop.registrations && workshop.registrations.length > 0).map((workshop) => (
-                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] mb-8">
                     {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-32 object-cover" />}
                     <div className="p-4 flex flex-col flex-grow">
                       <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>

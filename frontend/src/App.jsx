@@ -20,7 +20,8 @@ function App() {
 
 function AppContent() {
   const location = useLocation();
-  const showHeader = !['/login'].includes(location.pathname);
+  const showHeader = !['/login','/register'].includes(location.pathname);
+  
 
   return (
     <div>

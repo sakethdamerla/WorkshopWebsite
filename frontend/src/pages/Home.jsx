@@ -129,7 +129,7 @@ const Home = () => {
         <header className="text-center my-16">
           <TypingEffect
             text={[
-              "Welcome to the AI Workshop"
+              "Welcome to the Workshop"
             ]}
             className="text-3xl md:text-7xl font-extrabold mb-4 text-neutral-900 h-24"
             enabled={!isMobile}
