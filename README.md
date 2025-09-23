@@ -1,9 +1,76 @@
-# AI Workshops Website
+# 🎓 AI Workshop Portal
 
-This is a React-based website for managing AI workshops. It includes:
+A full-stack web application built with **React (frontend)**, **Node.js + Express (backend)**, and **MongoDB (database)**.  
+This project is designed to manage workshops and student registrations, with separate dashboards for **students** and **admins**.
 
+---
 
-## Getting Started
+## 🚀 Features
+
+- 🔐 **Authentication**
+  - Student registration & login
+  - Admin login with unique credentials
+- 📝 **Workshops**
+  - Admin can **create** and **delete** workshops
+  - Students can **view** and **register** for workshops
+- 📊 **Dashboards**
+  - Admin dashboard → see all registered students & workshop registrations
+  - Student dashboard → view personal details & registered workshops
+- 💾 **MongoDB Atlas** integration for storing all data
+- 🎨 Responsive **UI with TailwindCSS**
+
+---
+
+## 🗂️ Pages Overview
+
+### 🔹 Home Page
+- Introduction about the site  
+- "About Us" section with details about the makers of the site  
+- Contact card and footer with quick links  
+
+### 🔹 Register Page
+- Allows students to create an account with **name, email, and password**  
+- Data stored securely in MongoDB  
+
+### 🔹 Login Page
+- Students → login using their registered credentials  
+- Admin → login using predefined credentials (`admin@workshop.com / admin123`)  
+
+### 🔹 Student Dashboard
+- Displays **student’s username** in real-time  
+- Shows personal details  
+- Lists workshops available to register  
+- Displays registered workshops  
+
+### 🔹 Admin Dashboard
+- Displays all registered students  
+- Manage workshops (create & delete)  
+- Track registrations for each workshop  
+
+### 🔹 Contact Page (optional section in home)
+- Contact card with team members’ info  
+- Links to GitHub / social profiles  
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- React + Vite
+- React Router DOM
+- TailwindCSS
+
+**Backend**
+- Node.js
+- Express.js
+- Mongoose (MongoDB ODM)
+
+**Database**
+- MongoDB Atlas (Cloud)
+
+---
+
+## ⚙️ Setup Instructions
 
 ### 1. Clone the repository
 
