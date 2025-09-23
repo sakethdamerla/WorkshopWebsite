@@ -1,4 +1,4 @@
-# 🎓 AI Workshop Portal
+# 🎓 Workshop Portal
 
 A full-stack web application built with **React (frontend)**, **Node.js + Express (backend)**, and **MongoDB (database)**.  
 This project is designed to manage workshops and student registrations, with separate dashboards for **students** and **admins**.
