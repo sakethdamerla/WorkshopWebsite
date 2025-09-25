@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Countdown from "../components/Countdown";
 
 export default function StudentDashboard() {
@@ -160,22 +160,39 @@ export default function StudentDashboard() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {registeredWorkshops.length > 0 ? (
-                registeredWorkshops.map((workshop) => (
-                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
-                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
-                      <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                      <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
-                      <div className="mt-auto">
-                        <Countdown date={workshop.date} />
+                registeredWorkshops.map((workshop) => {
+                  const eventDate = new Date(workshop.date);
+                  const now = new Date();
+                  const isEventStarted = now >= eventDate;
+
+                  return (
+                    <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                      {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
+                      <div className="p-6 flex flex-col flex-grow">
+                        <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                        <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
+                        <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                        <div className="mt-auto">
+                          {!isEventStarted && <Countdown date={workshop.date} />}
+                        </div>
+                        <span className="mt-4 self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-green-500 text-white">
+                          Registered
+                        </span>
+                        <div className="mt-3">
+                          {isEventStarted ? (
+                            <Link to={`/registered-event/${workshop._id}/video`} className="inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-primary text-white hover:bg-opacity-90">
+                              Watch Now
+                            </Link>
+                          ) : (
+                            <button disabled className="inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-neutral-300 text-neutral-600 cursor-not-allowed">
+                              Event has not started
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <span className="mt-4 self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-green-500 text-white">
-                        Registered
-                      </span>
                     </div>
-                  </div>
-                ))
+                  )
+                })
               ) : (
                 <p className="text-lg text-neutral-600">You haven't registered for any workshops yet.</p>
               )}
