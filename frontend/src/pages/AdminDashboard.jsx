@@ -25,8 +25,6 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchWorkshops();
-    const interval = setInterval(fetchWorkshops, 5000); // Refetch every 5 seconds
-    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -98,7 +96,55 @@ export default function AdminDashboard() {
             <h2 className="text-xl -mx-6 font-bold mb-8 text-neutral-800 text-center">Create New Workshop</h2>
             <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mx-auto max-w-md">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Form inputs */}
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium text-neutral-700">Title</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 bg-white border border-neutral-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-neutral-700">Description</label>
+                  <textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 bg-white border border-neutral-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+                <div>
+                  <label htmlFor="image" className="block text-sm font-medium text-neutral-700">Image URL</label>
+                  <input
+                    type="text"
+                    id="image"
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 bg-white border border-neutral-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="date" className="block text-sm font-medium text-neutral-700">Date</label>
+                  <input
+                    type="date"
+                    id="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 bg-white border border-neutral-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                >
+                  Create Workshop
+                </button>
               </form>
             </div>
           </section>
@@ -116,16 +162,22 @@ export default function AdminDashboard() {
                       <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
                       <p className="text-sm text-neutral-500 mb-2">Date: {new Date(workshop.date).toLocaleDateString()}</p>
                       <p className="text-sm text-neutral-600 mb-4 flex-grow">Registrations: {workshop.registrations ? workshop.registrations.length : 0}</p>
-                      <div className="flex flex-row space-x-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-auto">
                         <Link
                           to={`/admin-dashboard/workshop/${workshop._id}/registrations`}
                           className="w-full text-center px-4 py-2 text-sm bg-blue-300 text-black rounded-lg hover:bg-opacity-90 transition-colors font-semibold"
                         >
                           View Registrations
                         </Link>
+                        <Link
+                          to={`/admin-dashboard/workshop/${workshop._id}/edit`}
+                          className="w-full text-center px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-semibold"
+                        >
+                          Edit
+                        </Link>
                         <button
                           onClick={() => handleDelete(workshop._id)}
-                          className="w-full px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
+                          className="w-full sm:col-span-2 px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
                         >
                           Delete
                         </button>

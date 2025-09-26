@@ -68,14 +68,15 @@ export default function StudentDashboard() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ studentEmail: user.email, phoneNumber: user.mobile }),
+        body: JSON.stringify({ studentEmail: user.email, phoneNumber: "000-000-0000" }), // Using a placeholder
       });
       console.log("Registration response.ok:", response.ok);
       const data = await response.json();
       console.log("Registration data.message:", data.message);
       if (response.ok) {
         alert(data.message);
-        fetchWorkshops(); // Re-fetch workshops to update registration status
+        fetchWorkshops(); // Re-fetch all workshops
+        fetchRegisteredWorkshops(); // Re-fetch registered workshops to ensure UI consistency
       } else {
         alert(data.message);
       }
@@ -122,29 +123,22 @@ export default function StudentDashboard() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {workshops.length > 0 ? (
-                workshops.map((workshop) => (
-                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
-                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
-                      <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                      <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
-                      <button
-                        onClick={() => handleWorkshopRegistration(workshop._id)}
-                        disabled={workshop.registrations?.includes(user?.email)}
-                        className={`mt-auto self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors ${
-                          workshop.registrations?.includes(user?.email)
-                            ? "bg-neutral-300 text-neutral-600 cursor-not-allowed"
-                            : "bg-primary text-white hover:bg-opacity-90"
-                        }`}
-                      >
-                        {workshop.registrations?.includes(user?.email)
-                          ? "Registered"
-                          : "Register Now"}
-                      </button>
+                workshops.map((workshop) => {
+                  const isRegistered = registeredWorkshops.some(rw => rw?._id === workshop._id);
+                  return (
+                    <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
+                      {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
+                      <div className="p-6 flex flex-col flex-grow">
+                        <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                        <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
+                        <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                        <button onClick={() => handleWorkshopRegistration(workshop._id)} disabled={isRegistered} className={`mt-auto self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors ${isRegistered ? "bg-neutral-300 text-neutral-600 cursor-not-allowed" : "bg-primary text-white hover:bg-opacity-90"}`}>
+                          {isRegistered ? "Registered" : "Register Now"}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p className="text-lg text-neutral-600">No workshops available yet. Check back later!</p>
               )}
@@ -160,7 +154,7 @@ export default function StudentDashboard() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {registeredWorkshops.length > 0 ? (
-                registeredWorkshops.map((workshop) => {
+                registeredWorkshops.filter(Boolean).map((workshop) => {
                   const eventDate = new Date(workshop.date);
                   const now = new Date();
                   const isEventStarted = now >= eventDate;
@@ -171,22 +165,17 @@ export default function StudentDashboard() {
                       <div className="p-6 flex flex-col flex-grow">
                         <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
                         <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                        <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
-                        <div className="mt-auto">
-                          {!isEventStarted && <Countdown date={workshop.date} />}
-                        </div>
-                        <span className="mt-4 self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-green-500 text-white">
-                          Registered
-                        </span>
-                        <div className="mt-3">
-                          {isEventStarted ? (
-                            <Link to={`/registered-event/${workshop._id}/video`} className="inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-primary text-white hover:bg-opacity-90">
+                        <p className="text-sm text-neutral-500 mb-4">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                        <div className="mt-auto pt-4 border-t border-gray-200">
+                          {!isEventStarted ? (
+                            <div className="text-center">
+                              <p className="text-lg font-semibold mb-2">Event starts in:</p>
+                              <Countdown date={workshop.date} />
+                            </div>
+                          ) : (
+                            <Link to={`/workshop/${workshop._id}/video`} className="inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-primary text-white hover:bg-opacity-90">
                               Watch Now
                             </Link>
-                          ) : (
-                            <button disabled className="inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-neutral-300 text-neutral-600 cursor-not-allowed">
-                              Event has not started
-                            </button>
                           )}
                         </div>
                       </div>
