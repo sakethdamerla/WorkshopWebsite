@@ -65,16 +65,16 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100 p-4">
-      <div className="relative max-w-md w-full mx-auto p-8 bg-white rounded-2xl shadow-lg">
+      <div className="relative max-w-md w-full mx-auto py-2 px-6 bg-white rounded-2xl shadow-lg sm:max-h-[60vh]">
         <Link to="/" className="absolute top-9 left-4 text-black hover:text-primary text-2xl">
           <FaHome />
         </Link>
-        <h2 className="text-3xl font-bold text-center text-neutral-900 mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-neutral-900 mb-3">
           {workshopId ? "Register for Workshop" : "Create Your Account"}
         </h2>
         
 
-        <form onSubmit={handleRegister} className="space-y-6">
+        <form onSubmit={handleRegister} className="space-y-2">
           {!workshopId && (
             <div>
               <label className="text-sm font-medium text-neutral-700">Full Name</label>
@@ -83,7 +83,7 @@ export default function Register() {
                 placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                className="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
                 required
               />
             </div>
@@ -96,7 +96,7 @@ export default function Register() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+              className="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
               required
             />
           </div>
@@ -108,7 +108,7 @@ export default function Register() {
               placeholder="123-456-7890"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+              className="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
               required
             />
           </div>
@@ -121,7 +121,7 @@ export default function Register() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
+                className="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow"
                 required
               />
             </div>
@@ -129,14 +129,14 @@ export default function Register() {
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-          <button className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300">
+          <button className="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300">
             {workshopId ? "Register for Workshop" : "Register"}
           </button>
         </form>
 
         {!workshopId && (
           <>
-            <p className="mt-8 text-center text-neutral-600">
+            <p className="mt-3 text-center text-neutral-600">
               Already have an account?{" "}
               <Link to="/login" className="text-primary hover:underline font-medium">
                 Login

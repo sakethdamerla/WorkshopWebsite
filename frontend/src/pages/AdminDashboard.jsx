@@ -80,21 +80,21 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 text-neutral-800">
-      <div className="container mx-auto p-8">
+      <div className="container mx-auto p-4 sm:p-8">
         <header className="md:flex md:items-center md:justify-between mb-12">
-          <div>
-            <h1 className="text-4xl md:text-5xl mb-6 font-bold text-neutral-900">Admin Dashboard</h1>
+          <div className="mb-6 md:mb-0">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900">Admin Dashboard</h1>
           </div>
-          <div>
-            <button onClick={() => setView("workshops")} className="mr-4 mb-2 sm:mb-0 px-4 py-2 sm:px-6 sm:py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">All Workshops</button>
+          <div className="flex flex-col sm:flex-row">
+            <button onClick={() => setView("workshops")} className="mr-0 sm:mr-4 mb-2 sm:mb-0 px-4 py-2 sm:px-6 sm:py-3 bg-primary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">All Workshops</button>
             <button onClick={() => setView("create")} className="px-4 py-2 sm:px-6 sm:py-3 bg-secondary text-white rounded-lg hover:bg-opacity-90 transition-colors font-semibold">Create Workshop</button>
           </div>
         </header>
 
         {view === "create" && (
           <section className="mb-12">
-            <h2 className="text-xl -mx-6 font-bold mb-8 text-neutral-800 text-center">Create New Workshop</h2>
-            <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mx-auto max-w-md">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-neutral-800 text-center">Create New Workshop</h2>
+            <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 mx-auto max-w-lg">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="title" className="block text-sm font-medium text-neutral-700">Title</label>
@@ -152,13 +152,13 @@ export default function AdminDashboard() {
 
         {view === "workshops" && (
           <section>
-            <h2 className="text-2xl font-bold mb-8 text-neutral-800">Manage Workshops</h2>
-            <div className="flex flex-wrap gap-8">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-neutral-800">Manage Workshops</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {workshops.length > 0 ? (
                 workshops.map((workshop) => (
-                  <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] mb-8">
-                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-32 object-cover" />}
-                    <div className="p-4 flex flex-col flex-grow">
+                  <div key={workshop._id} className="bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300 group border border-slate-200/80 hover:shadow-lg hover:-translate-y-1">
+                    {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-40 object-cover" />}
+                    <div className="p-4 sm:p-5 flex flex-col flex-grow">
                       <h3 className="text-xl font-bold mb-1 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
                       <p className="text-sm text-neutral-500 mb-2">Date: {new Date(workshop.date).toLocaleDateString()}</p>
                       <p className="text-sm text-neutral-600 mb-4 flex-grow">Registrations: {workshop.registrations ? workshop.registrations.length : 0}</p>

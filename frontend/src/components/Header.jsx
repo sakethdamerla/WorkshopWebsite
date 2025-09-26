@@ -16,7 +16,7 @@ export default function Header() {
   const isDashboard = location.pathname === "/admin-dashboard" || location.pathname === "/student-dashboard";
 
   return (
-    <header className="bg-neutral-900 text-white shadow-md">
+    <header className="sticky top-0 z-50 bg-blue-200/80 backdrop-blur-sm text-neutral-800 shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="text-2xl font-bold">
             Workshop
@@ -25,7 +25,7 @@ export default function Header() {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             type="button"
-            className="text-white hover:text-primary focus:outline-none focus:text-primary"
+            className="text-neutral-800 hover:text-primary focus:outline-none focus:text-primary"
             aria-label="toggle menu"
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current">
@@ -44,7 +44,7 @@ export default function Header() {
           </button>
         </div>
         <nav
-          className={`absolute top-16 left-0 right-0 bg-neutral-900 md:bg-transparent md:static md:block ${
+          className={`absolute top-16 left-0 right-0 bg-blue-200/95 md:bg-transparent md:static md:block z-20 ${
             isMenuOpen ? "block" : "hidden"
           }`}
         >
@@ -53,7 +53,7 @@ export default function Header() {
               <li>
                 <Link
                   to="/"
-                  className="block py-2 px-4 text-lg hover:text-blue-200 transition-colors duration-300"
+                  className="block py-2 px-4 text-lg hover:text-primary transition-colors duration-300"
                 >
                   Home
                 </Link>
@@ -64,7 +64,7 @@ export default function Header() {
                 <li>
                   <Link
                     to="/login"
-                    className="block py-2 px-4 text-lg hover:text-blue-200 transition-colors duration-300"
+                    className="block py-2 px-4 text-lg hover:text-primary transition-colors duration-300"
                   >
                     Login
                   </Link>

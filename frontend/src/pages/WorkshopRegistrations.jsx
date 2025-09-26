@@ -36,8 +36,8 @@ export default function WorkshopRegistrations() {
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6">
         <h1 className="text-3xl font-bold mb-2">Registrations for {workshopTitle || "Workshop"}</h1>
         <Link to="/admin-dashboard" className="text-primary hover:underline mb-6 block">&larr; Back to Admin Dashboard</Link>
         

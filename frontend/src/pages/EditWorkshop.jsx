@@ -63,8 +63,8 @@ export default function EditWorkshop() {
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 sm:p-8">
         <h1 className="text-3xl font-bold mb-2">Edit Workshop: {workshop?.title}</h1>
         <Link to="/admin-dashboard" className="text-primary hover:underline mb-6 block">&larr; Back to Admin Dashboard</Link>
         <form onSubmit={handleSubmit} className="space-y-6">

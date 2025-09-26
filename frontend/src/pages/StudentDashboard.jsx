@@ -87,28 +87,28 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 text-neutral-800">
-      <div className="container mx-auto p-8">
+    <div className="min-h-screen bg-gray-50 text-gray-800">
+      <div className="container mx-auto p-4 sm:p-8">
         {/* Header Section */}
         <header className="md:flex md:items-center md:justify-between mb-12">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
               Welcome, {userName}!
             </h1>
-            <p className="text-neutral-600 mt-2 text-lg">
+            <p className="text-gray-600 mt-2 text-lg">
               Let's continue your learning journey.
             </p>
           </div>
-          <div className="mt-4 md:mt-0">
+          <div className="mt-6 md:mt-0 flex flex-col sm:flex-row">
             <button
               onClick={() => setView("available")}
-              className={`mr-4 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors ${view === "available" ? "bg-primary text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
+              className={`mr-0 sm:mr-4 mb-2 sm:mb-0 px-5 py-2.5 rounded-lg font-semibold transition-colors ${view === "available" ? "bg-primary text-white shadow-sm" : "bg-white text-gray-700 border hover:bg-gray-100"}`}
             >
               Available Workshops
             </button>
             <button
               onClick={() => setView("registered")}
-              className={`px-4 py-2 mt-3 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors ${view === "registered" ? "bg-primary text-white" : "bg-gray-200 text-gray-800 hover:bg-gray-300"}`}
+              className={`px-5 py-2.5 rounded-lg font-semibold transition-colors ${view === "registered" ? "bg-primary text-white shadow-sm" : "bg-white text-gray-700 border hover:bg-gray-100"}`}
             >
               My Registered Events
             </button>
@@ -118,7 +118,7 @@ export default function StudentDashboard() {
         {/* Available Workshops Section */}
         {view === "available" && (
           <section>
-            <h2 className="text-3xl font-bold mb-8 text-neutral-800">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-gray-800">
               Available Workshops
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -126,13 +126,13 @@ export default function StudentDashboard() {
                 workshops.map((workshop) => {
                   const isRegistered = registeredWorkshops.some(rw => rw?._id === workshop._id);
                   return (
-                    <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
-                      {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
-                      <div className="p-6 flex flex-col flex-grow">
-                        <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
-                        <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                        <p className="text-sm text-neutral-500 mb-6">Date: {new Date(workshop.date).toLocaleDateString()}</p>
-                        <button onClick={() => handleWorkshopRegistration(workshop._id)} disabled={isRegistered} className={`mt-auto self-start inline-block px-6 py-3 font-semibold rounded-lg transition-colors ${isRegistered ? "bg-neutral-300 text-neutral-600 cursor-not-allowed" : "bg-primary text-white hover:bg-opacity-90"}`}>
+                    <div key={workshop._id} className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 group hover:shadow-xl hover:-translate-y-1 flex flex-col">
+                      {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-40 object-cover" />}
+                      <div className="p-4 sm:p-6 flex flex-col flex-grow">
+                        <h3 className="text-lg font-bold mb-2 text-gray-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                        <p className="text-gray-600 mb-4 flex-grow text-sm">{workshop.description.substring(0, 100)}...</p>
+                        <p className="text-xs text-gray-500 mb-4">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                        <button onClick={() => handleWorkshopRegistration(workshop._id)} disabled={isRegistered} className={`w-full mt-auto px-4 py-2 text-sm font-semibold rounded-md transition-colors ${isRegistered ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-primary text-white hover:bg-opacity-90"}`}>
                           {isRegistered ? "Registered" : "Register Now"}
                         </button>
                       </div>
@@ -140,7 +140,7 @@ export default function StudentDashboard() {
                   );
                 })
               ) : (
-                <p className="text-lg text-neutral-600">No workshops available yet. Check back later!</p>
+                <p className="text-lg text-gray-500 col-span-full text-center py-10">No workshops available yet. Check back later!</p>
               )}
             </div>
           </section>
@@ -149,31 +149,33 @@ export default function StudentDashboard() {
         {/* My Registered Workshops Section */}
         {view === "registered" && (
           <section className="mt-12">
-            <h2 className="text-3xl font-bold mb-8 text-neutral-800">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-gray-800">
               My Registered Workshops
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {registeredWorkshops.length > 0 ? (
-                registeredWorkshops.filter(Boolean).map((workshop) => {
+                registeredWorkshops
+                  .filter(Boolean)
+                  .sort((a, b) => new Date(a.date) - new Date(b.date)).map((workshop) => {
                   const eventDate = new Date(workshop.date);
                   const now = new Date();
                   const isEventStarted = now >= eventDate;
 
                   return (
-                    <div key={workshop._id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group">
-                      {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-48 object-cover" />}
-                      <div className="p-6 flex flex-col flex-grow">
-                        <h3 className="text-2xl font-bold mb-2 text-neutral-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
-                        <p className="text-neutral-600 mb-4 flex-grow">{workshop.description}</p>
-                        <p className="text-sm text-neutral-500 mb-4">Date: {new Date(workshop.date).toLocaleDateString()}</p>
+                    <div key={workshop._id} className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 group hover:shadow-xl hover:-translate-y-1 flex flex-col">
+                      {workshop.image && <img src={workshop.image} alt={workshop.title} className="w-full h-40 object-cover" />}
+                      <div className="p-4 sm:p-6 flex flex-col flex-grow">
+                        <h3 className="text-lg font-bold mb-2 text-gray-900 group-hover:text-primary transition-colors duration-300">{workshop.title}</h3>
+                        <p className="text-gray-600 mb-4 flex-grow text-sm">{workshop.description.substring(0, 100)}...</p>
+                        <p className="text-xs text-gray-500 mb-4">Date: {new Date(workshop.date).toLocaleDateString()}</p>
                         <div className="mt-auto pt-4 border-t border-gray-200">
                           {!isEventStarted ? (
-                            <div className="text-center">
-                              <p className="text-lg font-semibold mb-2">Event starts in:</p>
+                            <div className="text-center p-2 rounded-md bg-gray-100">
+                              <p className="text-sm font-semibold mb-2">Event starts in:</p>
                               <Countdown date={workshop.date} />
                             </div>
                           ) : (
-                            <Link to={`/workshop/${workshop._id}/video`} className="inline-block px-6 py-3 font-semibold rounded-lg transition-colors bg-primary text-white hover:bg-opacity-90">
+                            <Link to={`/workshop/${workshop._id}/video`} className="w-full block text-center px-4 py-2 text-sm font-semibold rounded-md transition-colors bg-primary text-white hover:bg-opacity-90">
                               Watch Now
                             </Link>
                           )}
@@ -183,7 +185,7 @@ export default function StudentDashboard() {
                   )
                 })
               ) : (
-                <p className="text-lg text-neutral-600">You haven't registered for any workshops yet.</p>
+                <p className="text-lg text-gray-500 col-span-full text-center py-10">You haven't registered for any workshops yet.</p>
               )}
             </div>
           </section>
